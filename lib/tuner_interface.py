@@ -12,7 +12,7 @@ import lib.stations as stations
 import lib.epg2xml as epg2xml
 import lib.channels_m3u as channels_m3u
 from lib.templates import templates
-
+import re
 
 # with help from https://www.acmesystems.it/python_http
 # and https://stackoverflow.com/questions/21631799/how-can-i-pass-parameters-to-a-requesthandler
@@ -172,7 +172,8 @@ class PlexHttpHandler(BaseHTTPRequestHandler):
                                                                      station_list[sid]['friendlyName'])
 
                 channelXML = channelXML + tmpXML
-
+            
+            channelXML = re.sub("&(?!amp;)", "&amp;", channelXML)
             self.do_response(200, 'application/xml', templates['xmlRmgDeviceChannels'].format(index + 1, channelXML))
 
         elif ((contentPath == '/devices/' + self.config['main']['uuid'] + '/scanners') and
